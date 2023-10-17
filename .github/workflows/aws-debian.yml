@@ -15,7 +15,9 @@ jobs:
       - name: Current Dic
         run: pwd
 
-    
+      - name: Directories inside
+        run: ls -a
+
       - name: Checkout code
         uses: actions/checkout@v2
 
