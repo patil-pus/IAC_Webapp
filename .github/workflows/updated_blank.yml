@@ -120,4 +120,4 @@ jobs:
             -var 'aws_access_key=${{secrets.AWS_ACCESS_KEY}}' \
             -var 'aws_secret_key=${{secrets.AWS_SECRET_KEY}}' \
             -var 'aws_ami_region=${{secrets.AWS_REGION}}' \
-            -var "path=/home/runner/work/IAC_Webapp/IAC_Webapp/webapp.zip" ami.us-east-1.pkr.hcl
+            -var "path=/home/runner/work/IAC_Webapp/IAC_Webapp/Packer" ami.us-east-1.pkr.hcl
