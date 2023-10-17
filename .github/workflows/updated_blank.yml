@@ -4,13 +4,13 @@ name: Node.js CI
 
 on:
 
-  pull_request:
+  push:
 
     branches:
 
       - main
 
- 
+
 
 jobs:
 
@@ -81,7 +81,43 @@ jobs:
         mysql -u ${{ secrets.MYSQL_USER}} -p"${{secrets.MYSQL_PASSWORD}}"
 
 
+        
+    - name: Zip webapp contents
+      run: |
+          zip -r webapp.zip ./
+      
+    - name: list files
+      run: |
+          ls -a
+          current_directory=$(pwd)
+          # Echo the value of the variable
+          echo "$current_directory"
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: v18.17.1
+    - name: install the dependencies
+      run: npm install
 
-    - name : Run Tests
-          
-      run :  npm test
+    - name: run the integration
+      run: |
+          source .env 
+          npm test
+                
+    - name: creating the aws cli configuration in yaml
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Build packer
+      run: |
+          cd packer
+          packer init aws-debian.pkr.hcl
+          packer build \
+            -var 'aws_access_key=${{secrets.AWS_ACCESS_KEY}}' \
+            -var 'aws_secret_key=${{secrets.AWS_SECRET_KEY}}' \
+            -var 'aws_ami_region=${{secrets.AWS_REGION}}' \
+            -var "path=/home/runner/work/IAC_Webapp/IAC_Webapp/webapp.zip" ami.us-east-1.pkr.hcl
