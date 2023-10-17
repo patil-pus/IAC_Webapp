@@ -16,6 +16,9 @@ jobs:
         run: pwd
 
       - name: Directories inside
+        run: cd .
+
+      - name: Directories inside
         run: ls -a
 
       - name: Checkout code
