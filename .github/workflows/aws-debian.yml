@@ -28,7 +28,7 @@ jobs:
         run: zip -r webapp.zip ./
 
       - name: test
-        run: ll 
+        run: ls
 
       - name: Install Packer
         uses: hashicorp/setup-packer@main
