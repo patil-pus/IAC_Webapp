@@ -27,6 +27,9 @@ jobs:
       - name: Zip Web App
         run: zip -r webapp.zip ./
 
+      - name: test
+        run: ll 
+
       - name: Install Packer
         uses: hashicorp/setup-packer@main
         with:
@@ -36,10 +39,10 @@ jobs:
         run: packer init webapp/
        
       - name: Packer fmt
-        run: packer fmt -check ./webapp/aws-debian.pkr.hcl
+        run: packer fmt -check ./webapp/ami.us-east-1.pkr.hcl
 
       - name: Packer validate
-        run: packer validate ./webapp/aws-debian.pkr.hcl
+        run: packer validate ./webapp/ami.us-east-1.pkr.hcl
           
       - name: Check for errors
         run: |
