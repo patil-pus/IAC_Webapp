@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
      - main
+
 jobs:
   validate:
     name: Validate Packer Template
@@ -12,7 +13,8 @@ jobs:
     steps:
 
       - name: Current Dic
-        uses: pwd
+        run: pwd
+
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,8 +34,7 @@ jobs:
         run: packer fmt -check ./webapp/aws-debian.pkr.hcl
 
       - name: Packer validate
-        run: |
-          packer validate ./webapp/aws-debian.pkr.hcl
+        run: packer validate ./webapp/aws-debian.pkr.hcl
           
       - name: Check for errors
         run: |
@@ -44,8 +45,4 @@ jobs:
             exit 1
           fi
 
-      - name: Fail if Packer validation fails
-        if: ${{ failure() }}
-        run: |
-          echo "Packer validation failed. Preventing pull request from merging."
-          exit 1
+     
