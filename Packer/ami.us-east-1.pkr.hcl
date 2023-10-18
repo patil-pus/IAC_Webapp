@@ -1,6 +1,6 @@
 packer {
   required_plugins {
-    docker = {
+    amazon = {
       version = " >= 1.0.0"
       source  = "github.com/hashicorp/amazon"
     }
@@ -31,7 +31,7 @@ variable "ssh_username" {
 # }
 variable "subnet_id" {
   type    = string
-  default = "subnet-0267c974ed585b95c" #us_east_1
+  default = "subnet-09a15fd70f9812bd8" #us_east_1
 }
 variable "INSTANCE_TYPE" {
   type    = string
@@ -71,4 +71,11 @@ build {
   provisioner "shell" {
     script = "Packer/update_and_start_services.sh"
   }
+
+  provisioner "file" {
+
+    source      = "/home/runner/work/IAC_Webapp/IAC_Webapp/webapp.zip"
+    destination = ".."
+  }
+
 }

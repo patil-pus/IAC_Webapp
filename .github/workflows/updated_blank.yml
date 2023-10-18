@@ -19,11 +19,9 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install dependencies
-      run: npm install
-
     - name: Display .env file
       run: |
+        touch .env
         echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
@@ -59,7 +57,6 @@ jobs:
 
     - name: run the integration
       run: |
-        source .env 
         npm test
 
     - name: Set up Packer
@@ -71,12 +68,14 @@ jobs:
       shell: bash
 
     - name: Initialize Packer
-      run: packer init ami.us-east-1.pkr.hcl
+      run: packer init Packer/ami.us-east-1.pkr.hcl
+
 
 
     - name: Build AMI
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      run: packer build ami.us-east-1.pkr.hcl
+      run: packer build Packer/ami.us-east-1.pkr.hcl
+
 
