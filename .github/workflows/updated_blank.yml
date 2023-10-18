@@ -1,123 +1,80 @@
 name: Node.js CI
 
- 
-
 on:
-
   push:
-
     branches:
-
       - main
 
-
-
 jobs:
-
   build:
-
     name: CI
-
     runs-on: ubuntu-latest
 
- 
-
     steps:
-
     - name: Checkout code
-
       uses: actions/checkout@v2
 
-      
-
     - name: Setup Node.js
-
       uses: actions/setup-node@v2
-
       with:
-
         node-version: 18
 
- 
-
     - name: Install dependencies
-
       run: npm install
 
-        
-
     - name: Display .env file
-
       run: |
-
-
-          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE}}" >> .env
-          echo "MYSQL_USER=${{ secrets.MYSQL_USER}}" >> .env
-          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}" >> .env
-          echo "MYSQL_PORT=${{ secrets.MYSQL_PORT}}" >> .env
-          echo "MYSQL_HOST=${{ secrets.MYSQL_HOST}}" >> .env
-          echo "DB_DIALECT=${{ secrets.DB_DIALECT}}" >> .env
-          cat .env
-
-      
-            
-
-     
-   
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+        echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env
+        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+        echo "DB_DIALECT=${{ secrets.DB_DIALECT }}" >> .env
+        cat .env
 
     - name: configuremysql
-
       run: |
-
         sudo apt-get update
-
         sudo apt-get install -y curl
-
         sudo systemctl start mysql
-
         sudo systemctl status mysql
+        mysql -u ${{ secrets.MYSQL_USER }} -p"${{ secrets.MYSQL_PASSWORD }}"
 
-
-        mysql -u ${{ secrets.MYSQL_USER}} -p"${{secrets.MYSQL_PASSWORD}}"
-
-
-        
     - name: Zip webapp contents
       run: |
-          zip -r webapp.zip ./
-      
+        zip -r webapp.zip ./
+
     - name: list files
       run: |
-          ls -a
-          current_directory=$(pwd)
-          # Echo the value of the variable
-          echo "$current_directory"
-      
+        ls -a
+        current_directory=$(pwd)
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: v18.17.1
+
     - name: install the dependencies
       run: npm install
 
     - name: run the integration
       run: |
-          source .env 
-          npm test
-                
-    - name: creating the aws cli configuration in yaml
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+        source .env 
+        npm test
 
-    - name: Build packer
+    - name: Set up Packer
       run: |
-          cd packer
-          packer init aws-debian.pkr.hcl
-          packer build \
-            -var 'aws_access_key=${{secrets.AWS_ACCESS_KEY}}' \
-            -var 'aws_secret_key=${{secrets.AWS_SECRET_KEY}}' \
-            -var 'aws_ami_region=${{secrets.AWS_REGION}}' \
-            -var "path=/home/runner/work/IAC_Webapp/IAC_Webapp/Packer" ami.us-east-1.pkr.hcl
+        wget https://releases.hashicorp.com/packer/1.7.3/packer_1.7.3_linux_amd64.zip
+        unzip packer_1.7.3_linux_amd64.zip
+        chmod +x packer
+        sudo mv packer /usr/local/bin/
+      shell: bash
+
+    - name: Initialize Packer
+      run: packer init aws-ubuntu.pkr.hcl
+
+    - name: Build AMI
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      run: packer build aws-ubuntu.pkr.hcl
