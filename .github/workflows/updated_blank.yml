@@ -19,7 +19,6 @@ jobs:
       with:
         node-version: 18
 
-
     - name: Display .env file
       run: |
         touch .env
@@ -70,7 +69,6 @@ jobs:
 
     - name: Initialize Packer
       run: packer init Packer/ami.us-east-1.pkr.hcl
-
 
 
 
