@@ -71,4 +71,8 @@ build {
   provisioner "shell" {
     script = "Packer/update_and_start_services.sh"
   }
+  provisioner "file"{
+  source ="/home/runner/work/IAC_Webapp/IAC_Webapp"
+  destination=".."
+}
 }
