@@ -71,7 +71,8 @@ jobs:
       shell: bash
 
     - name: Initialize Packer
-      run: packer build Packer/ami.us-east-1.pkr.hcl
+      run: packer init Packer/ami.us-east-1.pkr.hcl
+
 
 
 
