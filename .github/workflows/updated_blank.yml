@@ -71,7 +71,7 @@ jobs:
       shell: bash
 
     - name: Initialize Packer
-      run: packer init aws-ubuntu.pkr.hcl
+      run: packer init ami.us-east-1.pkr.hcl
 
 
     - name: Build AMI
