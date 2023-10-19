@@ -71,15 +71,15 @@ build {
 
   sources = ["source.amazon-ebs.debian-ami"]
 
-  provisioner "file" {
-    source      = "/home/runner/work/WebApp/WebApp/webapp.zip"
-    destination = "~/webapp.zip "
-  }
+  # provisioner "file" {
+  #   source      = "/home/runner/work/WebApp/WebApp/webapp.zip"
+  #   destination = "~/webapp.zip "
+  # }
 
 
 
   provisioner "shell" {
-    script = "Packer/update_and_start_services.sh"
+    script = "update_and_start_services.sh"
   }
 
 
