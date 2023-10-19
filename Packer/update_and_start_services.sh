@@ -23,8 +23,10 @@ sudo systemctl enable mariadb
 
 sudo DEBIAN_FRONTEND=noninteractive apt install -y unzip
 
+
 sudo unzip 'webapp.zip ' webapp
 npm install
+
 sudo apt-get clean
 
 
