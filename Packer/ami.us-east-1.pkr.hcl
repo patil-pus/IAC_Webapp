@@ -79,7 +79,7 @@ build {
 
 
   provisioner "shell" {
-    script = "update_and_start_services.sh"
+    script = "Packer/update_and_start_services.sh"
   }
 
 
