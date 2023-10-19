@@ -48,6 +48,9 @@ source "amazon-ebs" "debian-ami" {
   ssh_username                = "${var.ssh_username}"
   subnet_id                   = "${var.subnet_id}"
   associate_public_ip_address = true
+  ami_users                   = ["743136055866", "460740249339"]
+
+
 
   aws_polling {
     delay_seconds = 120
@@ -68,15 +71,16 @@ build {
 
   sources = ["source.amazon-ebs.debian-ami"]
 
+  provisioner "file" {
+    source      = "/home/runner/work/WebApp/WebApp/webapp.zip"
+    destination = "~/webapp.zip "
+  }
+
+
+
   provisioner "shell" {
     script = "Packer/update_and_start_services.sh"
   }
 
-  provisioner "file" {
-
-    source      = "/home/runner/work/IAC_Webapp/IAC_Webapp/webapp.zip"
-    destination = "/home/admin/webapp.zip "
-
-  }
 
 }

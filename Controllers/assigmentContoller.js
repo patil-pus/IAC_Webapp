@@ -110,6 +110,12 @@ export const getAss = async (req, res) => {
     }
   }
 };
-export const patchAssignment = async (req, res) => {
-  res.status(405).json();
-}
+
+export const handlePatchMethod = async (req, res) => {
+  if (req.method === 'PATCH') {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+};  
+
+
