@@ -1,16 +1,21 @@
-import { UUIDV4 } from "sequelize";
-import { sequelize, DataTypes } from "../Config/userConfig.js";
+import { UUIDV4, DataTypes, UUID } from "sequelize";
+import { sequelize } from "../Config/userConfig.js";
 
 export const Assignment = sequelize.define("Assignment", {
-   
+    id: {
+        type: DataTypes.UUID,
+        defaultValue: UUIDV4,
+        primaryKey: true,
+        unique: true,
+    },
+
     name: {
         type: DataTypes.STRING,
-        
         allowNull: false,
         validate: {
             notEmpty: true,
         },
-        unique:true,
+        unique: true,
     },
 
     points: {
@@ -19,7 +24,6 @@ export const Assignment = sequelize.define("Assignment", {
           min: 1,
           max: 10,
         }
-    ,
     },
 
     num_of_attempts: {
@@ -37,7 +41,7 @@ export const Assignment = sequelize.define("Assignment", {
         allowNull: false,
     },
 
-    createdBy:{
+    createdBy: {
         type: DataTypes.STRING,
     }
 }, {
@@ -45,4 +49,3 @@ export const Assignment = sequelize.define("Assignment", {
     createdAt: 'assignment_created',
     updatedAt: 'assignment_updated'
 });
-//

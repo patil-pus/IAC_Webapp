@@ -11,6 +11,7 @@ router.post('/',Check, assignmentController.createAssignmentDb);
 router.get('/:id', Check, assignmentController.getAssigByID);
 router.delete('/:id',Check,assignmentController.deleteAssignment);
 router.put('/:id',Check, assignmentController.updateAssignment);
-router.patch(Check,assignmentController.patchAssignment)
+router.patch( '/', assignmentController.handlePatchMethod);
+
 
 export default router;
